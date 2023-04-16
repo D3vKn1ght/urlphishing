@@ -13,8 +13,6 @@ COMPARE_MODE=3
 topic_name = "ai-phishing"
 topic_result="result"
 topic_comare="compare"
-topic_model_full="model_full"
-topic_model_half="model_half"
 bootrap_server = "42.96.42.99:9092"
 consumer = KafkaConsumer(
     topic_name,
@@ -24,6 +22,10 @@ consumer = KafkaConsumer(
 )
 index_full=-1
 index_half=-1
+list_topic_full=["model_full1","model_full2"]
+list_topic_half=["model_half1","model_half2"]
+# list_topic_full=["model_full"]
+# list_topic_half=["model_half"]
 def choisetopic(listtopic,index_current):
     if index_current==len(listtopic)-1:
         index_current=0
@@ -101,20 +103,20 @@ domain_blacklist = load_domain_list_from_file("blacklist.json")
 
 # find domain in blacklist
 def send_to_AI_Server(dictData):
-    global producer
+    global producer,index_full,index_half
     url=dictData.get("url")
     url,mode=get_real_url(url)
     if mode==MODEL_FULL_FEATURE:
         dictData["url"]=url
-        topic_send=topic_model_full
+        index_full,topic_send=choisetopic(list_topic_full,index_full)
     elif mode==MODEL_HALF_FEATURE:
         dictData["url"]=url
-        topic_send=topic_model_half
+        index_half,topic_send=choisetopic(list_topic_half,index_half)
     else:
         topic_send=topic_comare
         
     print(f"Send to {topic_send} Server: ", dictData)
-
+    
     producer.send(topic_send, dictData)
 
 def find_domain_in_blacklist(domain):
