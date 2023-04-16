@@ -22,10 +22,10 @@ consumer = KafkaConsumer(
 )
 index_full=-1
 index_half=-1
-list_topic_full=["model_full1","model_full2"]
-list_topic_half=["model_half1","model_half2"]
-# list_topic_full=["model_full"]
-# list_topic_half=["model_half"]
+# list_topic_full=["model_full1","model_full2"]
+# list_topic_half=["model_half1","model_half2"]
+list_topic_full=["model_full"]
+list_topic_half=["model_half"]
 def choisetopic(listtopic,index_current):
     if index_current==len(listtopic)-1:
         index_current=0
