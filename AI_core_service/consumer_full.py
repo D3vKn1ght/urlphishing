@@ -4,7 +4,7 @@ from kafka import KafkaConsumer
 from kafka import KafkaProducer
 
 
-topic_name="model_full"
+topic_name="model_full1"
 bootrap_server="42.96.42.99:9092"
 topic_result = "result"
 
