@@ -57,4 +57,9 @@ docker run -d -p 8000:8080 --restart=always --cap-add=SYS_ADMIN --name=dillinger
 ```sh
 127.0.0.1:8000
 ```
+## About our team
+- [Tran Bao Trung](https://github.com/trung501)
+- [Chu Tuan Kiet](https://github.com/kimstars)
+- [Nguyen Cong Hai Nam][df1]
+- [Khong Phuong Thao](https://github.com/kptis)
 Happy hacking, guys!
