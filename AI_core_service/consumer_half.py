@@ -9,7 +9,7 @@ bootrap_server="42.96.42.99:9092"
 topic_result = "result"
 
 import datetime
-from feature import FeatureExtraction
+from feature_half import FeatureExtraction
 import pickle
 import numpy as np
 import pandas as pd

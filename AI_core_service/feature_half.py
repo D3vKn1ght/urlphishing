@@ -11,6 +11,32 @@ import time
 from dateutil.parser import parse as date_parse
 from urllib.parse import urlparse
 
+
+import signal
+# Hàm xử lý timeout
+def timeout_handler(signum, frame):
+    raise TimeoutError("Hết thời gian chờ")
+
+
+# Hàm wrapper để đóng gói các hàm cần thiết lập timeout
+def run_with_timeout(func, timeout):
+    # Đăng ký signal SIGALRM với hàm xử lý timeout
+    signal.signal(signal.SIGALRM, timeout_handler)
+    # Đặt timeout
+    signal.alarm(timeout)
+    try:
+        # Gọi hàm cần thiết lập timeout
+        return func()
+    except TimeoutError as e:
+        print("Lỗi timeout:", e)
+        return -1
+    finally:
+        # Hủy bỏ đăng ký signal sau khi hoàn tất
+        signal.alarm(0)
+    return 0
+
+
+
 class FeatureExtraction:
     features = []
     def __init__(self,url):
@@ -22,20 +48,21 @@ class FeatureExtraction:
         self.response = ""
         self.soup = ""
 
-        # try:
-        #     self.response = requests.get(url)
-        #     self.soup = BeautifulSoup(response.text, 'html.parser')
-        # except:
-        #     pass
+        try:
+            self.response = requests.get(url)
+            self.soup = run_with_timeout(BeautifulSoup(self.response.text, 'html.parser'), 5)
+
+        except:
+            pass
 
         try:
-            self.urlparse = urlparse(url)
+            self.urlparse =run_with_timeout(urlparse(url), 5) 
             self.domain = self.urlparse.netloc
         except:
             pass
 
         try:
-            self.whois_response = whois.whois(self.domain)
+            self.whois_response = run_with_timeout(whois.whois(self.domain), 5)  
         except:
             pass
 
