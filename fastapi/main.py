@@ -76,7 +76,15 @@ async def root():
 @app.get("/listResult")
 async def listResult():
     global listData
-    #send and  convert listData to emptry
+    # savetoFile(copy_listData)
+    if len(listData) > 0:
+        with open("result.txt", "a", encoding="utf-8") as f:
+            for data in listData:
+                url = data.get("url")
+                is_phishing=data.get("is_phishing")
+                phishing_type=data.get("phishing_type")
+                time=data.get("time")
+                f.write(f"{url},{is_phishing},{phishing_type},{time}\n")
     copy_listData = listData.copy()
     listData = []
     return copy_listData
