@@ -22,6 +22,14 @@ consumer = KafkaConsumer(
     group_id=f'{topic_name}-group',
     auto_offset_reset='earliest'
 )
+index_full=-1
+index_half=-1
+def choisetopic(listtopic,index_current):
+    if index_current==len(listtopic)-1:
+        index_current=0
+    else:
+        index_current=index_current+1
+    return index_current,listtopic[index_current]
 
 def add_http(url, type='http'):
     if not url.startswith('http://') and not url.startswith('https://'):
