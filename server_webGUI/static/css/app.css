@@ -1,0 +1,157 @@
+* { box-sizing:border-box; }
+
+/* basic stylings ------------------------------------------ */
+body { background:url(https://scotch.io/wp-content/uploads/2014/07/61.jpg); }
+
+/* form starting stylings ------------------------------- */
+.group        { 
+  position:relative; 
+  margin-bottom:45px; 
+}
+input[type="text"]{
+  font-size:1rem;
+  padding:6px 6px 6px 5px;
+  display:block;
+  width:300px;
+  border:none;
+  border-bottom:1px solid #757575;
+}
+input:focus{ outline:none; }
+
+/* LABEL ======================================= */
+#input-text-label{
+  color:#999; 
+  font-size:1rem;
+  font-weight:normal;
+  position:absolute;
+  pointer-events:none;
+  left:5px;
+  top:10px;
+  transition:0.2s ease all; 
+  -moz-transition:0.2s ease all; 
+  -webkit-transition:0.2s ease all;
+}
+
+/* active state */
+input:focus ~ #input-text-label{
+  top:-20px;
+  font-size:14px;
+  color:#2bc48a;
+}
+
+/* BOTTOM BARS ================================= */
+.bar  { position:relative; display:block; width:300px; }
+.bar:before, .bar:after   {
+  content:'';
+  height:2px; 
+  width:0;
+  bottom:1px; 
+  position:absolute;
+  background:#2bc48a; 
+  transition:0.2s ease all; 
+  -moz-transition:0.2s ease all; 
+  -webkit-transition:0.2s ease all;
+}
+.bar:before {
+  left:50%;
+}
+.bar:after {
+  right:50%; 
+}
+
+/* active state */
+input:focus ~ .bar:before, input:focus ~ .bar:after {
+  width:50%;
+}
+
+/* HIGHLIGHTER ================================== */
+.highlight {
+  position:absolute;
+  height:60%; 
+  width:100px; 
+  top:25%; 
+  left:0;
+  pointer-events:none;
+  opacity:0.5;
+} */
+
+/* active state */
+input:focus ~ .highlight {
+  -webkit-animation:inputHighlighter 0.3s ease;
+  -moz-animation:inputHighlighter 0.3s ease;
+  animation:inputHighlighter 0.3s ease;
+}
+
+/* ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+  from { background:#2bc48a; }
+  to  { width:0; background:transparent; }
+}
+@-moz-keyframes inputHighlighter {
+  from { background:#2bc48a; }
+  to  { width:0; background:transparent; }
+}
+@keyframes inputHighlighter {
+  from { background:#2bc48a; }
+  to  { width:0; background:transparent; }
+}
+
+.detect-url-form{
+    width: 48%;
+}
+.detect-url-form .group{
+    margin-bottom: 30px;
+}
+#file-url-input{
+    display: none;
+}
+#fileName{
+    border: solid 1px #333;
+    border-right: none;
+    width: 70%;
+    height: 34px;
+    font-size: 1rem;
+    line-height: 34px;
+    text-align: center;
+    color: #999;
+}
+#file-upload-label{
+    height: 34px;
+    padding: 0 15px;
+    line-height: 32px;
+    color: #fff;
+    font-weight: 400;
+    background-color: #2bc48a;
+}
+.detect-url-form .btn-custom{
+    padding: 4px 20px;
+    font-size: 1rem;
+}
+.result{
+    width: 40%;
+}
+.result .url{
+    font-size: 1.6rem;
+}
+.result .prop{
+    width: 20%;
+    font-size: 1rem;
+    border-radius: 4px;
+    color: #fff;
+    line-height: 38px;
+}
+.table th{
+  font-size: 0.8rem;
+}
+.table tr td{
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.hidden{
+  display: none;
+}
+
+.display{
+  display: flex;
+  justify-content: space-between;
+}

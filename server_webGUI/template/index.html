@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-based</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="banner text-center">
+            <div class="banner-title">DETECT URL</div>
+            <div class="banner-more-inf">
+                <div> Detect url phishing  </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="d-flex justify-content-center" style="width: 100%;">
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="nav-file-upload" data-bs-toggle="pill"
+                            data-bs-target="#file-upload-content" type="button" role="tab"
+                            aria-controls="file-upload-content" aria-selected="true">FILE</button>
+                    </li>
+                    <li class="nav-item " role="presentation">
+                        <button class="nav-link" id="nav-fill-url" data-bs-toggle="pill"
+                            data-bs-target="#fill-url-content" type="button" role="tab" aria-controls="fill-url-content"
+                            aria-selected="false">URL</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="file-upload-content" role="tabpanel"
+                    aria-labelledby="nav-file-upload">
+                    <form action="" method="POST" class="detect-url-form" id="upload-file-form"
+                        enctype="multipart/form-data">
+                        <div class="group text-center">
+                            <input type="text" name="colName" id="colName" class="form-control"
+                                placeholder="Column name" required>
+                        </div>
+                        <div class="group file-url-wrap text-center" style="height: 150px;">
+                            <!-- <img src="/static/img/upload.png" alt="" class="upload-file-img"> -->
+                            <div id="fileName">Select a file</div>
+                            <input type="file" name="file" id="file-url-input" style="display: none;" required>
+                            <label for="file-url-input" id="file-upload-label">Browse file</label>
+                        </div>
+                        <div class="btn-wrap d-flex justify-content-center" style="padding: 30px 0;">
+                            <div class="d-flex justify-content-between" style="width: 18%;">
+                                <button type="button"
+                                    class="btn btn-sm btn-info btn-custom btn-submit-file">Check</button>
+                                <button type="reset" class="btn btn-sm btn-warning btn-custom btn-reset">Reset</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="show-error-upload-file" class="text-center"></div>
+                    <div class="hidden" style="padding: 50px 0;" id="statistic_wrap">
+                        <div class="chart" style="width:47%">
+                            <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+                        </div>
+                        <div class="table-responsive" style="width:47%;height: 500px;" overflow-y="auto">
+                            <table class="table">
+                                <thead class="table-info">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">URL</th>
+                                        <th scope="col">TYPE</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="statistic_tb-bd overflow-auto" style="height: 200px;">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="fill-url-content" role="tabpanel" aria-labelledby="nav-fill-url">
+                    <form action="" method="POST" class="fill-url-form">
+                        <div class="group text-center">
+                            <input type="text" name="text_url" id="url-text" class="form-control" placeholder="URL"
+                                required>
+                        </div>
+                        <div class="btn-wrap d-flex justify-content-center" style="padding: 30px 0;">
+                            <div class="d-flex justify-content-between" style="width: 18%;">
+                                <button type="button"
+                                    class="btn btn-sm btn-info btn-custom btn-submit-url">Check</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="show-error-fill-url" class="text-center"></div>
+                    <div class="result hidden">
+                        <div style="margin-bottom:100px;" id="result_wrap">
+
+                        </div>
+                        <!-- <div class="d-flex justify-content-evenly" style="width:50%;margin: 0 auto;">
+                            <button class="btn btn-sm btn-success">Truy cập</button>
+                            <button class="btn btn-sm btn-warning">Truy cập (Khi độc hại)</button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+    //show file name
+    $(function () {
+        $("#file-url-input").change(function (event) {
+            var x = event.target.files[0].name
+            $("#fileName").text(x)
+        });
+    })
+
+    // click reset button
+    $(".btn-reset").click(function () {
+        $("#fileName").empty().append("Select a file");
+    })
+
+    var a = 0;
+    var b = 0;
+
+    var a1 = 50;
+    var a2 = 50;
+
+
+    function fetchData() {
+        // Sử dụng hàm fetch() để gửi yêu cầu HTTP đến địa chỉ IP 42.96.42.99:8000/listResult
+        fetch('http://42.96.42.99:8000/listResult')
+            .then(response => {
+                // Kiểm tra xem yêu cầu thành công (status 200)
+                if (response.status === 200) {
+                    return response.json(); // Chuyển dữ liệu nhận được thành đối tượng JSON
+                } else {
+                    throw new Error('Lỗi yêu cầu: ' + response.statusText);
+                }
+            })
+            .then(data => {
+                // Xử lý dữ liệu JSON nhận được
+                console.log("this is data =>"+data); // Hiển thị dữ liệu lên console
+                if (data != null) {
+
+                    $("#fileName").empty().append("Select a file");
+                    $("#statistic_wrap").removeClass("hidden").addClass("display");
+                    var a = data;
+                    $.each(a, function (key, value) {
+                        // console.log('dung');
+                        $(".statistic_tb-bd").append(
+                            "<tr>" +
+                            "<th scope='row'>" + (key + 1) + "</th>" +
+                            "<td>" + value.url + "</td>" +
+                            "<td class='tb-detect-result'>" + value.is_phishing + "</td>" +
+                            "</tr>"
+                        );
+
+                    });
+
+
+                    var dt_result = $(".tb-detect-result");
+                    console.log("kiet alo ==========> " + dt_result);
+                    Array.from(dt_result).forEach(element => {
+                        console.log(element.outerText);
+                        switch (element.outerText) {
+                            case "1":
+                                element.style.color = "#000";
+                                element.style.backgroundColor = "red"
+                                a = a + 1;
+                                break;
+                            case "0":
+                                element.style.color = "#000";
+                                element.style.backgroundColor = "#198754";
+                                b = b + 1;
+                                break;
+
+                            default:
+                                console.log("error");
+                                break;
+                        }
+                    });
+                    a1 = Math.round(a / (a + b) * 100);
+                    a2 = Math.round(b / (a + b) * 100);
+                    myChart.data.datasets[0].data[0] = a1;
+                    myChart.data.datasets[0].data[1] = a2;
+                    myChart.update();
+                }
+
+            })
+            .catch(error => {
+                console.error(error); // Hiển thị lỗi nếu có
+            })
+            .finally(() => {
+                // Sử dụng hàm setTimeout() để tự động gọi lại fetchData() mỗi 5 giây
+                setTimeout(fetchData, 5000);
+            });
+    }
+
+    // Gọi hàm fetchData() lần đầu khi trang web được tải
+    window.onload = fetchData;
+
+    // click check button
+    $(".btn-submit-file").click(function (e) {
+        var form = $("#upload-file-form");
+        var input_file = $('#file-url-input');
+        var selected_file = input_file.get(0).files.length;
+        if (selected_file != 0) {
+            var formData = new FormData(form[0]);
+            // Lấy giá trị của textbox input
+            var colNameInput = document.getElementById('colName');
+            var colName = colNameInput.value;
+
+            // Thêm giá trị của textbox input vào FormData
+            formData.append('colName', colName);
+
+            e.preventDefault();
+            $('#show-error-upload-file').empty();
+            $.ajax({
+                type: 'POST',
+                url: 'http://42.96.42.99:8000/upload',
+                enctype: 'multipart/form-data',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data != null) {
+                        $("#fileName").empty().append("Select a file");
+                        $("#statistic_wrap").removeClass("hidden").addClass("display");
+                        // $.each(a, function (key, value) {
+                        //     // console.log('dung');
+                        //     $(".statistic_tb-bd").append(
+                        //         "<tr>" +
+                        //         "<th scope='row'>" + (key + 1) + "</th>" +
+                        //         "<td>" + value.url + "</td>" +
+                        //         "<td class='tb-detect-result'>" + value.predict + "</td>" +
+                        //         "</tr>"
+                        //     );
+                        //     // console.log(key);
+                        //     // console.log(value);
+                        // });
+                    } else {
+                        console.log("no data");
+                    }
+                }
+            }).then(function (response) {
+
+
+
+
+
+            });
+        } else {
+            $('#show-error-upload-file').append("No file selected").css('color', 'red');
+        }
+    })
+
+
+
+
+
+    // click submit fill url
+    $('.btn-submit-url').click(function (e) {
+        e.preventDefault();
+        var input_text = $('#url-text');
+        console.log(input_text.val());
+        if (input_text.val() != '') {
+            $('#show-error-fill-url').empty();
+            $.ajax({
+                type: 'POST',
+                url: '/get_url',
+                data: {
+                    'url': input_text.val()
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data != null) {
+                        $("#url-text").empty();
+                        $(".result").removeClass("hidden");
+                        var a = JSON.parse(data);
+                        $("#result_wrap").empty()
+                        $("#result_wrap").append(
+                            // "<div class='text-center url'>" + a.url + "</div>" +
+                            // "<div class='prop text-center'>" + a.predict + "</div>"+
+                            "<div class='d-flex justify-content-between' style=\"height: 50px;font-size: large;\">URL: <a  href=\"" + a.url + "\">" + a.url + "</a></div>" +
+                            "<div class='d-flex justify-content-between' style=\"height: 50px;font-size: large;\">TYPE: <div class='prop text-center' id='duong' style=\"width: 160px; font-size: larger;height: 40px;\">" + a.predict + "</div></div>"
+                        )
+                    }
+                }
+            }).then(function (response) {
+                var predict_txt = $("#duong").text();
+                console.log($("#duong"));
+                console.log(predict_txt);
+                switch (predict_txt) {
+                    case "UNSAFE":
+                        $("#duong").css('background-color', "red")
+                        break;
+                    case "SAFE":
+                        $("#duong").css('background-color', '#198754');
+                        break;
+                   
+                    default:
+                        console.log("error");
+                        break;
+                };
+            })
+        } else {
+            $('#show-error-fill-url').append('Please fill url').css('color', 'red');
+            $(input_text).focus();
+        }
+
+    })
+
+
+    // chart
+    var xValues = ["UNSAFE", "SAFE"];
+    // console.log(a);
+
+
+
+
+    var yValues = [a1, a2];
+    var barColors = [
+        "red",
+        "#198754"
+    ];
+
+
+    var myChart = new Chart("myChart", {
+        type: "pie",
+        data: {
+            labels: xValues,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yValues
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: "Detect URL chart"
+            }
+        }
+    });
+
+    Chart.defaults.global.defaultFontSize = 16;
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"></script>
+
+</html>

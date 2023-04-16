@@ -1,0 +1,78 @@
+.banner{
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #fff;
+    padding: 50px 0;
+}
+.banner-title{
+    font-size: 4rem;
+    font-weight: 600;
+    color: #394fff;
+    padding: 20px 0;
+}
+.banner-more-inf{
+    padding: 20px 0;
+}
+.banner-more-inf div{
+    font-size: 1.2rem;
+}
+
+.container ul li{
+    padding: 0;
+    
+}
+.container ul li button{
+    padding: 10px 80px;
+}
+.file-url-wrap{
+    padding: 20px;
+    border: 1px dashed #394fff;
+    border-radius: 10px;
+    width:40%;
+    margin: 0 auto;
+}
+
+#file-upload-label{
+    margin-top: 20px;
+    padding: 5px 10px;
+    background-color: #394fff;
+    font-size: 1rem;
+    color: #fff;
+}
+#fileName{
+    padding: 20px 0;
+    font-weight: 500;
+}
+.btn-wrap div .btn-custom{
+    padding: 8px 30px;
+    font-size: 1rem;
+    font-weight: 450;
+}
+.hidden{
+    display: none;
+}
+.display{
+    display: flex;
+    justify-content: space-between;
+}
+.fill-url-form{
+    width: 50%;
+    margin: 0 auto;
+}
+
+#fill-url-content .result{
+    padding: 30px;
+    width:50% ;
+    margin: 0 auto;
+}
+.result .url{
+    font-size: 1.4rem;
+}
+.result .prop{
+    width: 20%;
+    font-size: 1rem;
+    border-radius: 4px;
+    color: #fff;
+    line-height: 38px;
+    background-color: #394fff;
+}
