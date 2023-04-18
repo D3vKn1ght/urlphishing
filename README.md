@@ -11,7 +11,7 @@ In addition, our approach to building a phishing URL detection system also incor
 - ✨Fast API + GUI Flask python✨
 # Final results
 - System performance: ~1-2s/URL, >1000 requests/s
-- Link web-based application: [Detect Phishing URLs](http://103.182.16.8:3400/)
+- Link web-based application: [Detect Phishing URLs](http://42.96.42.99:3400/)
 - Presentation: [Detecting Phishing URLs Presentation](https://drive.google.com/drive/folders/1SQx2JPiDt6ZnVu9dO2mfNar2lg0m6QKB?usp=sharing)
 - Real-time Extension-based application to warning phishing URLs for users
 # Future development
@@ -57,4 +57,11 @@ docker run -d -p 8000:8080 --restart=always --cap-add=SYS_ADMIN --name=dillinger
 ```sh
 127.0.0.1:8000
 ```
-Happy hacking, guys!
+## About our team
+- [Tran Bao Trung](https://github.com/trung501)
+- [Chu Tuan Kiet](https://github.com/kimstars)
+- [Nguyen Cong Hai Nam](https://github.com/kptis)
+- [Khong Phuong Thao](https://github.com/kptis)
+
+> Happy hacking, guys!
+
